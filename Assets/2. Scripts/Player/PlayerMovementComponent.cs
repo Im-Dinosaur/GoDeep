@@ -14,6 +14,7 @@ namespace GoDeep
         [SerializeField, Range(0.01f, 1f)] private float lookSensitivity = 0.1f; //마우스 감도
         private Vector3 velocity; //현재 수영 속도 벡터
         private float pitch; //시점의 상하 각도
+        public float viewPitch => pitch; //네트워크 표현에 전달할 상하 시선
 
         private void Awake() //필수 이동 참조 초기화
         {

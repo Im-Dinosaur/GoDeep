@@ -1046,9 +1046,9 @@ MonoBehaviour:
     m_LineSpacing: 1
   m_Text: 'A first-person underwater co-op exploration game.
 
-    This build tests swimming, the watch and oxygen use.
+    Practice the equipment solo or swim with up to 4 divers.
 
-    Multiplayer and voice will follow in the next stages.'
+    Online movement is ready to test. Voice comes next.'
 --- !u!222 &337248142
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -2365,7 +2365,7 @@ MonoBehaviour:
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 10
-    m_MaxSize: 40
+    m_MaxSize: 96
     m_Alignment: 0
     m_AlignByGeometry: 0
     m_RichText: 1
@@ -5249,7 +5249,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: M1  /  LOCAL PRACTICE     -     WINDOWS + KEYBOARD / MOUSE
+  m_Text: M2  /  ONLINE MOVEMENT     -     WINDOWS + KEYBOARD / MOUSE
 --- !u!222 &2034115289
 CanvasRenderer:
   m_ObjectHideFlags: 0

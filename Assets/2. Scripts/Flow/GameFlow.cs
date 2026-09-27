@@ -15,16 +15,23 @@ namespace GoDeep
 
         public void startPrototype() //로컬 조작 시제품 시작
         {
+            if (NetworkSession.instance != null && NetworkSession.instance.onlineRequested) return;
             loadScene("Play");
         }
 
-        public void returnHome() //홈 화면으로 이동
+        public async void returnHome() //온라인 방 정리 또는 홈 화면 이동
         {
+            if (NetworkSession.instance != null && NetworkSession.instance.onlineRequested)
+            {
+                await NetworkSession.instance.leaveRoom();
+                return;
+            }
             loadScene("Home");
         }
 
         public void restartPrototype() //현재 시제품 상태를 처음부터 재시작
         {
+            if (NetworkSession.instance != null && NetworkSession.instance.onlineRequested) return;
             loadScene("Play");
         }
 

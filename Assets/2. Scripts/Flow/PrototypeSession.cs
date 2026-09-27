@@ -9,16 +9,32 @@ namespace GoDeep
         [SerializeField] private Player trainingDiver; //산소 공유를 연습할 다이버
         [SerializeField] private AirPocketComponent[] airPockets; //시제품의 에어포켓 목록
         [SerializeField] private GameFlow gameFlow; //재시작과 메뉴 이동 진입점
+        [SerializeField] private GameObject[] offlineOnlyObjects; //온라인 이동 시험에서는 숨길 보급품과 로컬 표지
         private RunState runState; //현재 시제품 진행 상태
         private float elapsedTime; //일시정지를 제외한 탐사 시간
         private bool enteredWater; //입구 에어포켓에서 출발했는지 여부
+        private bool networkPractice; //온라인 이동 검증 모드 여부
 
         public Player player => localPlayer; //UI가 사용할 플레이어 진입점
         public RunState state => runState; //결과 화면에 표시할 진행 상태
         public float elapsed => elapsedTime; //플레이 시간
+        public bool isNetworkPractice => networkPractice; //온라인 전용 안내 표시 여부
+
+        private void Awake() //네트워크 러너가 생성할 다이버와 로컬 배치를 구분
+        {
+            networkPractice = NetworkSession.instance != null && NetworkSession.instance.onlineRequested;
+            if (!networkPractice) return;
+            if (localPlayer != null) localPlayer.gameObject.SetActive(false);
+            if (trainingDiver != null) trainingDiver.gameObject.SetActive(false);
+            if (offlineOnlyObjects != null)
+                foreach (var item in offlineOnlyObjects) //로컬 연습에서만 사용할 장면 요소
+                    if (item != null) item.SetActive(false);
+            localPlayer = null;
+        }
 
         private void Start() //시작 공간을 판정하고 조작 안내 표시
         {
+            if (networkPractice) return;
             refreshPocket(localPlayer);
             if (trainingDiver != null) refreshPocket(trainingDiver);
             localPlayer.setPaused(true);
@@ -26,6 +42,16 @@ namespace GoDeep
 
         private void Update() //입력과 공간과 산소를 순서대로 갱신
         {
+            if (networkPractice)
+            {
+                localPlayer = NetworkSession.instance != null ? NetworkSession.instance.localPlayer : null;
+                if (localPlayer != null)
+                {
+                    refreshPocket(localPlayer);
+                    elapsedTime += Time.deltaTime;
+                }
+                return;
+            }
             var input = localPlayer.readInput(); //이번 프레임의 로컬 입력
             if (input.restart)
             {
@@ -67,7 +93,7 @@ namespace GoDeep
 
         public void resumeDive() //시작 또는 일시정지 화면에서 수영 재개
         {
-            if (runState == RunState.Exploring) localPlayer.setPaused(false);
+            if (runState == RunState.Exploring && localPlayer != null) localPlayer.setPaused(false);
         }
     }
 }

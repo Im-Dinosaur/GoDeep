@@ -3300,6 +3300,16 @@ MonoBehaviour:
   - {fileID: 430294039}
   - {fileID: 1542718728}
   gameFlow: {fileID: 1989558330}
+  offlineOnlyObjects:
+  - {fileID: 1541387584}
+  - {fileID: 567995941}
+  - {fileID: 2055982936}
+  - {fileID: 903805350}
+  - {fileID: 973761727}
+  - {fileID: 328018722}
+  - {fileID: 93257923}
+  - {fileID: 672337488}
+  - {fileID: 1055352836}
 --- !u!4 &849433724
 Transform:
   m_ObjectHideFlags: 0
@@ -7453,6 +7463,10 @@ MonoBehaviour:
   resumeButton: {fileID: 1055641127}
   progressFill: {fileID: 719076380}
   progressWidth: 360
+  objectiveText: {fileID: 1480728434}
+  controlsText: {fileID: 76601139}
+  returnButtonText: {fileID: 1495597234}
+  restartButton: {fileID: 1787947615}
 --- !u!114 &1859050999
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -36,6 +36,7 @@ namespace GoDeep
         public PlayerOxygenComponent.LifeState lifeState => oxygenComponent.state; //UI와 진행 판정용 생존 상태
         public float rescueTime => oxygenComponent.remainingRescueTime; //구조 제한 시간
         public string message => notificationTime > 0f ? notification : ""; //현재 표시할 행동 결과
+        public float viewPitch => movementComponent != null ? movementComponent.viewPitch : 0f; //네트워크 전신 표현용 상하 시선
 
         private void Awake() //각 기능 참조 초기화
         {
@@ -128,6 +129,25 @@ namespace GoDeep
         public void setAirPocket(AirPocketComponent pocket) //세션에서 판정한 현재 공간 적용
         {
             currentPocket = pocket;
+        }
+
+        public void configureNetworkControl(bool isOwner, string playerName) //네트워크 권한에 따라 로컬 조작과 시점 설정
+        {
+            locallyControlled = isOwner;
+            diverName = playerName;
+            if (viewCamera != null) viewCamera.gameObject.SetActive(isOwner);
+            var controller = GetComponent<CharacterController>(); //로컬 충돌 계산 대상
+            if (controller != null) controller.enabled = isOwner;
+            setPaused(isOwner);
+        }
+
+        public void simulateNetworkMovement(PlayerInputComponent.Frame input, float deltaTime) //이동 동기화 증분에 필요한 로컬 기능만 호출
+        {
+            if (!locallyControlled || paused) return;
+            movementComponent.simulate(input, deltaTime, true);
+            watchComponent.setVisible(input.watch);
+            watchComponent.present(depth, oxygenPercent);
+            presentationComponent.present(deltaTime, movementComponent.getSpeedRatio(), watchComponent.isVisible, false);
         }
 
         public bool receiveOxygen(float amount) //아이템과 장치의 산소 공급 진입점

@@ -18,6 +18,10 @@ namespace GoDeep
         [SerializeField] private Button resumeButton; //시작 또는 이어하기 버튼
         [SerializeField] private Image progressFill; //목표 방향 진행 안내
         [SerializeField, Min(1f)] private float progressWidth = 360f; //진행 표시의 전체 너비
+        [SerializeField] private Text objectiveText; //현재 모드의 목표 안내
+        [SerializeField] private Text controlsText; //현재 모드의 조작 안내
+        [SerializeField] private Text returnButtonText; //현재 모드의 복귀 목적지 안내
+        [SerializeField] private Button restartButton; //로컬 연습에서만 사용할 재시작 버튼
 
         private void Update() //파사드에서 받은 현재 플레이 상태 표시
         {
@@ -44,6 +48,22 @@ namespace GoDeep
                 ? "You reached the next pocket.\nThis is the end of the first movement prototype.\nTry the watch, oxygen sharing and supplies on your next dive."
                 : session.state == PrototypeSession.RunState.Failed ? "Your oxygen ran out.\nUse a pack or refill before leaving an air pocket."
                 : "Reach the warm light at the far end of the cave.\n\nWASD + MOUSE  Swim / look     SPACE / CTRL  Rise / descend\nSHIFT  Swim faster     Q  Equip / stow oxygen pack\nLMB  Use on self     RMB  Use on diver / hold to check watch\nE  Collect / refill     1-4  Watch signal preview\nESC  Pause     R  Restart\n\nLOCAL PRACTICE  /  Online play and voice are not active yet.";
+            if (session.isNetworkPractice) presentNetwork(player);
+        }
+
+        private void presentNetwork(Player player) //온라인 이동 검증의 실제 지원 범위 표시
+        {
+            var network = NetworkSession.instance; //방 상태를 제공하는 진입점
+            if (network == null) return;
+            if (objectiveText != null) objectiveText.text = "002  /  SWIM TOGETHER";
+            if (controlsText != null) controlsText.text = "WASD  SWIM    SPACE / CTRL  UP / DOWN\nSHIFT  FASTER    RMB  WATCH    ESC  MENU";
+            if (returnButtonText != null) returnButtonText.text = "LEAVE ROOM";
+            if (restartButton != null) restartButton.gameObject.SetActive(false);
+            locationText.text = "ROOM " + network.roomCode + "  /  " + network.playerCount + "/4  /  " + network.region.ToUpperInvariant();
+            inventoryText.text = "ONLINE MOVEMENT TEST\nOXYGEN FIXED  /  ITEMS & VOICE COMING NEXT";
+            interactionText.text = player.isPaused ? "" : "[ESC] MENU     [HOLD RMB] WATCH";
+            pauseTitle.text = "ROOM " + network.roomCode;
+            pauseDescription.text = "Share this 8-character code with up to 3 friends.\n\nWASD + MOUSE  Swim / look     SPACE / CTRL  Rise / descend\nSHIFT  Swim faster     RMB  Check watch     ESC  Menu\n\nMovement and view direction are synchronized.\nOxygen, item sharing, watch signals and voice are not active here yet.\nOpening this menu pauses only your own movement.\nLEAVE ROOM returns to dive preparation.";
         }
     }
 }
