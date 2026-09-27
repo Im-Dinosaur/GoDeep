@@ -6,6 +6,9 @@
 # See: https://github.com/github/gitignore/tree/main/Global
 #
 .utmp/
+# Downloaded Photon SDKs and local app settings are installed per workstation.
+/Assets/Photon/
+/Assets/Photon.meta
 /[Ll]ibrary/
 /[Tt]emp/
 /[Oo]bj/
